@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="信息学竞赛考试系统，支持试题下载、源代码提交与查看。">
+    <meta name="theme-color" content="#245ce8">
+    <title>登录 - 信息学竞赛考试系统</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="icon-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 12l-2 2 2 2m6-4 2 2-2 2m-2-5-2 6"/></symbol>
+      <symbol id="icon-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></symbol>
+      <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24"><path d="m9 3-.6 2.2-1.8 1L4.4 6l-2 3.5L4 11v2l-1.6 1.5 2 3.5 2.2-.2 1.8 1L9 21h4l.6-2.2 1.8-1 2.2.2 2-3.5L18 13v-2l1.6-1.5-2-3.5-2.2.2-1.8-1L13 3Z"/><circle cx="11" cy="12" r="3"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="icon-size" viewBox="0 0 24 24"><path d="M5 20V10h4v10m2 0V4h4v16m2 0v-7h4v7M2 20h20"/></symbol>
+      <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 4H4v16h5m6-4 4-4-4-4m-7 4h12"/></symbol>
+    </svg>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">信息学竞赛考试系统</a>
+        <div id="account" class="account" hidden>
+          <button id="account-toggle" class="account-toggle" type="button" aria-expanded="false" aria-controls="account-menu" aria-label="账户设置">
+            <span id="header-candidate"></span>
+            <svg class="icon" aria-hidden="true"><use href="#icon-settings"/></svg>
+          </button>
+          <div id="account-menu" class="account-menu" hidden>
+            <p id="account-name"></p>
+            <button id="logout-button" type="button"><svg class="icon" aria-hidden="true"><use href="#icon-logout"/></svg>退出登录</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div id="loading-view" class="loading-view" role="status">正在加载考试信息…</div>
+      <section id="login-view" class="login-view" aria-labelledby="login-title" hidden>
+        <div class="login-card panel">
+          <h1 id="login-title">考试管理系统</h1>
+          <form id="login-form" novalidate>
+            <div class="form-field">
+              <label for="username">用户名</label>
+              <input id="username" name="username" type="text" autocomplete="username" minlength="4" maxlength="20" pattern="[A-Za-z0-9\-]{4,20}" placeholder="LN-0001" aria-describedby="username-hint" required>
+              <p id="username-hint" class="field-hint">请输入考号，例如 LN-0001；支持字母、数字和连字符</p>
+            </div>
+            <div class="form-field">
+              <label for="password">密码</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" maxlength="32" aria-describedby="password-hint" required>
+              <p id="password-hint" class="field-hint">密码长度6-32位，支持任意字符</p>
+            </div>
+            <p id="login-error" class="form-error" role="alert" hidden></p>
+            <button id="login-button" class="button button-primary login-button" type="submit">登录</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="exam-view" class="exam-view" aria-labelledby="exam-title" hidden>
+        <article class="exam-info panel">
+          <div class="exam-heading">
+            <h1 id="exam-title">2026-CSP-Junior</h1>
+            <span id="exam-status" class="exam-status">考试进行中</span>
+          </div>
+          <div class="exam-details">
+            <section class="student-info" aria-labelledby="student-name">
+              <h2 id="student-name"></h2>
+              <ul class="student-details">
+                <li>学校: <span id="student-school"></span></li>
+                <li>年级: <span id="student-grade"></span></li>
+                <li>考场: <span id="student-room"></span></li>
+              </ul>
+            </section>
+            <section class="exam-instructions" aria-labelledby="instructions-title">
+              <h2 id="instructions-title">考试流程</h2>
+              <ul>
+                <li>第1步，下载试题包，并解压。 <button id="download-button" class="download-link" type="button">下载</button></li>
+                <li>第2步，用密码解密试题。试题密码: <strong id="exam-password" class="exam-password">None</strong></li>
+                <li>第3步，编程解答各道题目，并将源代码提交到系统。</li>
+                <li>第4步，查看已经提交的源代码，确认提交是否正确。</li>
+              </ul>
+            </section>
+          </div>
+        </article>
+        <div id="problems" class="problem-grid" aria-label="题目提交"></div>
+      </section>
+      <noscript><p class="noscript-notice">请启用浏览器 JavaScript 后使用考试系统。</p></noscript>
+    </main>
+
+    <footer class="site-footer">© 信息学竞赛考试小组</footer>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <template id="problem-template">
+      <article class="problem-card panel">
+        <h2 class="problem-title"></h2>
+        <div class="problem-body">
+          <p class="submission-status"><span class="status-dot"></span><span class="status-text">尚未提交</span><span class="resubmit-hint" hidden>（可重新提交）</span></p>
+          <div class="submission-meta" hidden>
+            <p><svg class="icon" aria-hidden="true"><use href="#icon-file"/></svg><span class="submitted-name"></span></p>
+            <p><svg class="icon" aria-hidden="true"><use href="#icon-size"/></svg><span class="submitted-size"></span></p>
+            <p><svg class="icon" aria-hidden="true"><use href="#icon-clock"/></svg><time class="submitted-time"></time></p>
+          </div>
+          <label class="file-picker">
+            <input class="file-input" type="file" accept=".cpp,.cc,.cxx,.c,.py,.java,.pas">
+            <svg class="icon" aria-hidden="true"><use href="#icon-file"/></svg>
+            <span class="file-picker-label">选择提交文件</span>
+            <span class="selected-name">（未选择）</span>
+            <svg class="icon chevron" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </label>
+          <p class="problem-error form-error" role="alert" hidden></p>
+          <div class="problem-actions">
+            <button class="button button-primary submit-button" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#icon-send"/></svg><span>提交</span></button>
+            <button class="button button-success view-button" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#icon-eye"/></svg>查看代码</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <dialog id="code-dialog" class="code-dialog" aria-labelledby="code-title">
+      <div class="dialog-header"><h2 id="code-title"></h2><button class="icon-button close-dialog" type="button" aria-label="关闭代码预览"><svg class="icon" aria-hidden="true"><use href="#icon-close"/></svg></button></div>
+      <div class="code-body"><pre><code id="code-content"></code></pre></div>
+      <div class="dialog-footer"><button class="button button-primary close-dialog" type="button" autofocus>关闭</button></div>
+    </dialog>
+
+    <dialog id="message-dialog" class="message-dialog" aria-labelledby="message-text">
+      <p id="message-text"></p>
+      <div class="dialog-footer"><button class="button button-primary" type="button" autofocus>确定</button></div>
+    </dialog>
+  </body>
+</html>

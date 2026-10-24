@@ -1,0 +1,16 @@
+{
+  "name": "oi-submit-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "简洁的信息学竞赛考试与代码提交系统",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test tests/server.test.mjs tests/source-file.test.mjs",
+    "check": "node --check server.mjs && node --check config.mjs && node --check public/app.js && node --check public/source-file.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
